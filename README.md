@@ -25,7 +25,7 @@ CritiqueNest is an interactive platform for sharing and discovering reviews on b
 To set up the project locally, follow these steps:
 
 ```bash
-git clone https://github.com/yourusername/CritiqueNest.git
+git clone https://github.com/showrin20/CritiqueNest.git
 cd CritiqueNest
 # Follow any additional setup instructions here
 npm install
