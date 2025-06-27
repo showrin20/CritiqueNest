@@ -17,16 +17,5 @@ CritiqueNest is an interactive platform for sharing and discovering reviews on b
 - **HTML**: Structure of the web pages.
 - **CSS**: Styling of the application.
 - **Bootstrap**: Responsive design framework.
-- **Node.js**: Backend server.
+- **fastapi**: Backend server.
 - **MySQL**: Database for storing user and content data.
-
-## Installation
-
-To set up the project locally, follow these steps:
-
-```bash
-git clone https://github.com/showrin20/CritiqueNest.git
-cd CritiqueNest
-# Follow any additional setup instructions here
-npm install
-npm start
