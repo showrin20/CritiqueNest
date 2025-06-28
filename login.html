@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CritiqueNest - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold">CritiqueNest</a>
+            <div class="space-x-4">
+                <a href="index.html" class="hover:underline">Home</a>
+                <a href="find-reviews.html" class="hover:underline">Find Reviews</a>
+                <a href="give-reviews.html" class="hover:underline">Give Reviews</a>
+                <a href="login.html" class="hover:underline">Login</a>
+                <a href="signup.html" class="hover:underline">Signup</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto py-8">
+        <h2 class="text-3xl font-bold mb-4 text-center">Login</h2>
+        <form id="loginForm" class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
+            </div>
+            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 w-full">Login</button>
+        </form>
+        <p class="text-center mt-4">Don't have an account? <a href="signup.html" class="text-blue-600 hover:underline">Signup</a></p>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white p-4 text-center">
+        <p>© 2025 CritiqueNest. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Login
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const response = await fetch("http://localhost:8000/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({ username, password })
+                });
+                if (!response.ok) throw new Error(await response.text());
+                const data = await response.json();
+                localStorage.setItem("token", data.access_token);
+                alert("Login successful!");
+                window.location.href = "index.html";
+            } catch (error) {
+                alert("Error logging in: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

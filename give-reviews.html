@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CritiqueNest - Give Reviews</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between">
+          <!-- Logo -->
+          <a href="index.html" class="text-2xl font-bold mb-2 sm:mb-0">CritiqueNest</a>
+      
+          <!-- Centered Nav Links -->
+          <div class="flex flex-wrap justify-center space-x-4">
+            <a href="index.html" class="hover:underline">Home</a>
+            <a href="find-reviews.html" class="hover:underline">Find Reviews</a>
+            <a href="give-reviews.html" class="hover:underline">Give Reviews</a>
+            <a href="login.html" class="hover:underline">Login</a>
+            <a href="signup.html" class="hover:underline">Signup</a>
+          </div>
+        </div>
+      </nav>
+      
+      
+
+    <!-- Main Content -->
+    <main class="container mx-auto py-8">
+        <h2 class="text-3xl font-bold mb-4">Give a Review</h2>
+        <form id="reviewForm" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+            <div class="mb-4">
+                <label for="mediaId" class="block text-sm font-medium text-gray-700">Media ID (optional)</label>
+                <input type="number" id="mediaId" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Enter Media ID if known">
+            </div>
+            <div class="mb-4">
+                <label for="mediaTitle" class="block text-sm font-medium text-gray-700">Media Title</label>
+                <input type="text" id="mediaTitle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Enter media title">
+            </div>
+            <div class="mb-4">
+                <label for="imageUrl" class="block text-sm font-medium text-gray-700">Image URL</label>
+                <input type="url" id="imageUrl" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Enter image URL">
+            </div>
+            <div class="mb-4">
+                <label for="type" class="block text-sm font-medium text-gray-700">Media Type</label>
+                <select id="type" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                    <option value="">Select type</option>
+                    <option value="book">Book</option>
+                    <option value="movie">Movie</option>
+                    <option value="web_series">Web Series</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="userId" class="block text-sm font-medium text-gray-700">User ID</label>
+                <input type="number" id="userId" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
+            </div>
+            <div class="mb-4">
+                <label for="rating" class="block text-sm font-medium text-gray-700">Rating (0-5)</label>
+                <input type="number" step="0.1" min="0" max="5" id="rating" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
+            </div>
+            <div class="mb-4">
+                <label for="comment" class="block text-sm font-medium text-gray-700">Comment</label>
+                <textarea id="comment" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Submit Review</button>
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white p-4 text-center">
+        <p>© 2025 CritiqueNest. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Submit Review
+        document.getElementById("reviewForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const mediaId = document.getElementById("mediaId").value;
+            const mediaTitle = document.getElementById("mediaTitle").value;
+            const imageUrl = document.getElementById("imageUrl").value;
+            const type = document.getElementById("type").value;
+            const userId = document.getElementById("userId").value;
+            const rating = document.getElementById("rating").value;
+            const comment = document.getElementById("comment").value;
+
+            const payload = {
+                rating: parseFloat(rating),
+                comment,
+                user_id: parseInt(userId)
+            };
+            if (mediaId) payload.media_id = parseInt(mediaId);
+            if (mediaTitle) payload.media_title = mediaTitle;
+            if (imageUrl) payload.image_url = imageUrl;
+            if (type) payload.type = type;
+
+            try {
+                const response = await fetch("http://localhost:8000/reviews/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error(await response.text());
+                alert("Review submitted successfully!");
+                document.getElementById("reviewForm").reset();
+            } catch (error) {
+                alert("Error submitting review: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

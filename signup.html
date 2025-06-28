@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CritiqueNest - Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between">
+          <!-- Logo -->
+          <a href="index.html" class="text-2xl font-bold mb-2 sm:mb-0">CritiqueNest</a>
+      
+          <!-- Centered Nav Links -->
+          <div class="flex flex-wrap justify-center space-x-4">
+            <a href="index.html" class="hover:underline">Home</a>
+            <a href="find-reviews.html" class="hover:underline">Find Reviews</a>
+            <a href="give-reviews.html" class="hover:underline">Give Reviews</a>
+            <a href="login.html" class="hover:underline">Login</a>
+            <a href="signup.html" class="hover:underline">Signup</a>
+          </div>
+        </div>
+      </nav>
+      
+    <!-- Main Content -->
+    <main class="container mx-auto py-8">
+        <h2 class="text-3xl font-bold mb-4 text-center">Signup</h2>
+        <form id="signupForm" class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
+            </div>
+            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 w-full">Signup</button>
+        </form>
+        <p class="text-center mt-4">Already have an account? <a href="login.html" class="text-blue-600 hover:underline">Login</a></p>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white p-4 text-center">
+        <p>© 2025 CritiqueNest. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Signup
+        document.getElementById("signupForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const response = await fetch("http://localhost:8000/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, email, password })
+                });
+                if (!response.ok) throw new Error(await response.text());
+                alert("Signup successful! Please log in.");
+                window.location.href = "login.html";
+            } catch (error) {
+                alert("Error signing up: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

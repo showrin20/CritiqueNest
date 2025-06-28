@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CritiqueNest - Find Reviews</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold">CritiqueNest</a>
+            <div class="space-x-4">
+                <a href="index.html" class="hover:underline">Home</a>
+                <a href="find-reviews.html" class="hover:underline">Find Reviews</a>
+                <a href="give-reviews.html" class="hover:underline">Give Reviews</a>
+                <a href="login.html" class="hover:underline">Login</a>
+                <a href="signup.html" class="hover:underline">Signup</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto py-8">
+        <h2 class="text-3xl font-bold mb-4">Find Reviews</h2>
+        <!-- Filtering Bar -->
+        <div class="mb-6 flex flex-wrap gap-4 items-center">
+            <div>
+                <label for="filterType" class="block text-sm font-medium text-gray-700">Filter by Type</label>
+                <select id="filterType" class="mt-1 block w-48 p-2 border border-gray-300 rounded-md">
+                    <option value="">All Types</option>
+                    <option value="book">Book</option>
+                    <option value="movie">Movie</option>
+                    <option value="web_series">Web Series</option>
+                </select>
+            </div>
+            <div>
+                <label for="searchMediaId" class="block text-sm font-medium text-gray-700">Search by Media ID</label>
+                <input type="number" id="searchMediaId" class="mt-1 block w-48 p-2 border border-gray-300 rounded-md" placeholder="Enter Media ID">
+            </div>
+            <button onclick="fetchReviews()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Apply Filters</button>
+        </div>
+        <!-- Reviews List -->
+        <div id="reviewsList" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white p-4 text-center">
+        <p>© 2025 CritiqueNest. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Fetch Reviews with Filters
+        async function fetchReviews() {
+            const filterType = document.getElementById("filterType").value;
+            const searchMediaId = document.getElementById("searchMediaId").value;
+            const reviewsList = document.getElementById("reviewsList");
+            reviewsList.innerHTML = "";
+
+            let url = "http://localhost:8000/reviews/";
+            if (searchMediaId) {
+                url = `http://localhost:8000/reviews/media/${searchMediaId}`;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                if (!response.ok) throw new Error(await response.text());
+                let reviews = await response.json();
+
+                // Apply client-side type filter
+                if (filterType) {
+                    reviews = reviews.filter(review => review.type === filterType);
+                }
+
+                if (reviews.length === 0) {
+                    reviewsList.innerHTML = '<p class="text-gray-500">No reviews found.</p>';
+                    return;
+                }
+
+                reviews.forEach(review => {
+                    const reviewCard = `
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onclick="window.location.href='review.html?id=${review.id}'">
+                            <img src="${review.image_url}" alt="${review.media_title}" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h3 class="text-lg font-semibold">${review.media_title}</h3>
+                                <p class="text-sm text-gray-600">Type: ${review.type}</p>
+                                <p class="text-sm text-gray-600">Rating: ${review.rating}/5</p>
+                                <p class="text-sm text-gray-600">${review.comment.substring(0, 100)}${review.comment.length > 100 ? '...' : ''}</p>
+                            </div>
+                        </div>`;
+                    reviewsList.innerHTML += reviewCard;
+                });
+            } catch (error) {
+                reviewsList.innerHTML = `<p class="text-red-500">Error fetching reviews: ${error.message}</p>`;
+            }
+        }
+
+        // Load reviews on page load
+        window.onload = fetchReviews;
+    </script>
+</body>
+</html>
