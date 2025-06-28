@@ -1,4 +1,4 @@
-# [CritiqueNest](https://docs.google.com/document/d/1I2_DS1M3DM6rIpDqXRLnO_6o6xwlV3a-SqVG3viLRYs/edit?usp=sharing)
+# [CritiqueNest]()
 
 CritiqueNest is an interactive platform for sharing and discovering reviews on books, web series, and movies.
 
